@@ -132,6 +132,8 @@ docker run hello-world
 
 ## Connect Public Git Repo to AWS EC2 Instance
 
+Source: 09 clone private repo in AWS EC2. Lets Write Code. https://youtu.be/cEyn7RHu7-c?si=zirI4SlCSN9-mlbg
+
 Check if git is installed
 '''
 sudo apt install git
@@ -144,7 +146,7 @@ ssh-keygen
 
 Get the public key
 '''
-cat id_rsa.pub
+cat ~/.ssh/id_rsa.pub
 '''
 
 Copy and paste it. Go to Github Settings, SSH and GPG Keys to add key.
@@ -157,38 +159,6 @@ ssh -T git@github.com
 '''
 git clone <ssh_url>
 '''
-
-OR
-
-Source: https://gist.github.com/matthewoden/b29353e266c554e04be8ea2058bcc2a0
-
-Add yourself to SSH Authentication
-'''
-ssh-add <path_to_EC2>.pem
-'''
-
-Set up destination directory
-'''
-ssh ubuntu@<public_IPv4>.com
-mkdir repo-name.git && cd repo-name.git
-git init --bare
-'''
-
-Set up local to push to new remote
-'''
-cd repo-name
-git init git add .
-git commit -m "Initial git commit message"
-git remote add origin ubuntu@<publicIPv4>.com:git@github.com:hellomc/mlops-zoomcamp-2025.git
-git config --global remote.origin.receivepack "git receive-pack"
-git push origin master
-'''
-
-Clone repository
-'''
-git clone ubuntu@<publicIPv4>.com:git@github.com:hellomc/mlops-zoomcamp-2025.git
-'''
-
 
 ## Access Visual Studio Code
 
