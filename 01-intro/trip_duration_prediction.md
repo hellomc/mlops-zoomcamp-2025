@@ -18,7 +18,7 @@ wget https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2021-02.parq
 
 Read parquet files in pandas
 
-```pd.read_parquet(./data/green_tripdata_2021-01.parquet)```
+```green_jan_2021 = pd.read_parquet('./data/green_tripdata_2021-01.parquet')```
 
 Parquet reads in data as datetime
 
@@ -27,8 +27,8 @@ Parquet reads in data as datetime
 Calculate duration of trip in minutes
 
 ```
-df['duration'] = df.lpep_dropoff_datetime - df.lpep_pickup_datetime
-df.duration = df.duration.apply(lambda td: td.total_seconds() / 60)
+green_jan_2021['duration'] = green_jan_2021.lpep_dropoff_datetime - green_jan_2021.lpep_pickup_datetime
+green_jan_2021.duration = green_jan_2021.duration.apply(lambda td: td.total_seconds() / 60)
 ```
 
 Visualize the duration
@@ -38,20 +38,20 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 ```
 
-```sns.distplot(df.duration)```
+```sns.displot(green_jan_2021.duration)```
 
 
 Check the distribution of trip duration
 
-```df.duration.describe()```
+```green_jan_2021.duration.describe()```
 
 Get the mean of trip duration
 
-```((df.duration >= 1) & (df.duration <= 60)).mean()```
+```((green_jan_2021.duration >= 1) & (green_jan_2021.duration <= 60)).mean()```
 
 Limit trip durations to range of 1 to 60 minutes.
 
-```df = df[(df.duration >= 1) & (df.duration <= 60)]```
+```green_jan_2021 = green_jan_2021[(green_jan_2021.duration >= 1) & (green_jan_2021.duration <= 60)]```
 
 ## Select features: categorical and numerical values
 
@@ -64,12 +64,12 @@ numerical = ['trip_distance']
 
 Check types for categorical values
 
-```df[categorical].dtypes```
+```green_jan_2021[categorical].dtypes```
 
 
 Make categorical values string types
 
-```df[categorical] = df[categorical].astype(str)```
+```green_jan_2021[categorical] = green_jan_2021[categorical].astype(str)```
 
 Create dictionary of data from df
 
@@ -166,7 +166,7 @@ numerical = ['trip_distance]
 Create data dictionaries for training and validation sets
 
 ```
-dv = DictVectorizer
+dv = DictVectorizer()
 
 train_dicts = df_train[categorical + numerical].to_dict(orient='records')
 X_train = dv.fit_transform(train_dicts)
