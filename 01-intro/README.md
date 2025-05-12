@@ -4,6 +4,8 @@
 
 [Environment Setup](01-intro/environment-setup.md)
 
+[MLOps Notes](01-intro/mlops.md)
+
 [Trip Duration Green Taxi Notes](01-intro/trip_duration_prediction.md)
 
 [Trip Duration Green Taxi Jupyter Notebook](01-intro/duration-prediction-green.ipynb)
