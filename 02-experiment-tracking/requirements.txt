@@ -6,4 +6,4 @@ seaborn
 hyperopt
 xgboost
 boto3
-aws-cli
+psycopg2
