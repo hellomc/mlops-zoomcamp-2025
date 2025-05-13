@@ -42,6 +42,14 @@ After the DB instance is created, go to the RDS console, select the new db. Unde
 
 ## Connect to the EC2 Instance
 
+Update the EC2 instance security group to allow the following
+
+Type: Custom TCP
+Port Range: 5000
+Source: 0.0.0.0/0
+
+![EC2 Security Group](images/ec2-security-group.png)
+
 ```ssh mlops-zoomcamp```
 
 Install packages to environment
