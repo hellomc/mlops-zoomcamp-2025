@@ -44,31 +44,15 @@ After the DB instance is created, go to the RDS console, select the new db. Unde
 
 ```ssh mlops-zoomcamp```
 
-Create requirements.txt
-
-```
-mlflow
-jupyter
-scikit-learn
-pandas
-seaborn
-hyperopt
-xgboost
-boto3
-aws-cli
-```
-
-Run updates
-
-```sudo yum update```
-
 Install packages to environment
 
-```pip3 install requirements.txt```
+```pip3 install -r requirements.txt```
 
 Check for access to S3 bucket
 
 ```aws s3 ls```
+
+![](images/s3-bucket-check.png)
 
 Run mlflow command
 
