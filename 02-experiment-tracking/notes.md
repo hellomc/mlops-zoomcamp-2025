@@ -444,6 +444,10 @@ booster = xgb.train(
 )
 ```
 
+Download notebook
+
+```scp -i ~/.ssh/<key_name>.pem ubuntu@3.148.222.145:/home/ubuntu/notebooks/experiment-duration-green.ipynb ./experiment-duration-green.ipynb```
+
 ## Model Registry
 
 What is the model registry?

@@ -18,18 +18,18 @@ Note: Name must be unique across all AWS regions within a partition.
 ## Postgres DB with RDS
 
 Create new PostgreSQL database as backend database.
-![](images/db-postgresql.png)
+![DB PostgreSQL](images/db-postgresql.png)
 
 Select PostgreSQL engine and select Free Tier template.
-![](images/db-free-tier.png)
+![DB Free Tier](images/db-free-tier.png)
 
 Set name for db instance ```mlflow-db-backend```
 Set master username ```mlflow```
 Select option to Auto generate a password.
-![](images/db-settings.png)
+![DB Settings](images/db-settings.png)
 
 Under Additional Configuration, specify an initial database name ```mflow_db_taxi```
-![](images/db-additional-config.png)
+![DB Additional Configuration](images/db-additional-config.png)
 
 Keep track of the following information
 
@@ -60,10 +60,12 @@ Check for access to S3 bucket
 
 ```aws s3 ls```
 
-![](images/s3-bucket-check.png)
+![AWS S3 Bucket](images/s3-bucket-check.png)
 
 Run mlflow command
 
 ```mlflow server -h 0.0.0.0 -p 5000 --backend-store-uri postgresql://<DB_USER>:<DB_PASSWORD>@<DB_ENDPOINT>:5432/<DB_NAME> --default-artifact-root s3://<S3_BUCKET_NAME>```
+
+![MLFlow Remote](images/mlflow-remote.png)
 
 Access the remote experiment tracking server locally by going to address ```http://<EC2_PUBLIC_DNS>:5000```
