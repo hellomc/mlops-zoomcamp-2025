@@ -4,13 +4,31 @@
 
 Model Architecture + Model Training + Model Evaluation
 
+It's a process of tracking all releavnt information in ML experiments.
+
+* Code
+* Version
+* Environment
+* Data
+* Model
+* Artifacts
+* Metrics
+* Hyperparameters, etc
+
 ## Why does experiment tracking matter?
 
 Reproducibility
 
+* repeat the model performance
+
 Organization
 
+* track information in a detailed, organized manner
+* allows for better working collaboration
+
 Optimization
+
+* train a model with the best performance
 
 ## Tool: MLFlow
 
@@ -25,9 +43,13 @@ ML lifecycle = building and maintaining ML models
 Contains 4 modules:
 
 * Tracking
+  * focused on experiment tracking
 * Models
+  * packaging ML models
 * Model Registry
+  * used for model management
 * Projects
+  * packages code in reproducible and reusable way
 
 ### Tracking
 
@@ -42,11 +64,15 @@ Also logs extra information about the run
 * start and end time
 * author
 
-Run mlflow locally on ui
+### Locally run mlflow
 
 ```mlflow ui```
 
 Open up url http://127.0.0.1:<port_number>
+
+Store artifacts in sqlite
+
+```mlflow ui --backend-store-uri sqlite:///mlflow.db```
 
 Shows UI for MLFlow
 
@@ -64,22 +90,35 @@ pandas
 seaborn
 hyperopt
 xgboost
+boto3
+psycopg2-binary
 ```
 
-Store artifacts in sqlite
+```pip install -r requirements.txt```
 
-```mlflow ui --backend-store-uri sqlite:///mlflow.db```
+### Run MLFlow Remotely in EC2
 
 In Jupyter Notebook
 
 ```
 import mlflow
 
-mlflow.set_tracking_uri('sqlite:///mlflow.db')
-mflow.set_experiment('nyc-taxi-experiment')
+mlflow.set_tracking_uri('http://<EC2_PUBLIC_DNS>:5000')
 ```
 
-After running linear regression model, try a run with Lasso model
+![MLFlow Tracking URI](images/mlflow-tracking-uri.png)
+
+Test run mlflow
+
+![MLFLow Test 1](images/mlflow-test-1.png)
+
+![MLFlow Test 2](images/mlflow-test-2.png)
+
+Set up the MLFlow experiment and name it ```nyc-taxi-experiment```
+
+```mflow.set_experiment('nyc-taxi-experiment')```
+
+After training linear regression model, try an MLFlow run training with Lasso model and alpha = 0.01
 ```
 with mlflow.start_run():
     mlflow.set_tag('developer', '<name>')
@@ -100,7 +139,7 @@ with mlflow.start_run():
 
 Try running a new experiment with alpha = 0.1
 
-## Hyperparameter Training
+### Hyperparameter Tuning
 
 ```import xgboost as xgb```
 
@@ -128,7 +167,7 @@ Define the objective function.
 ```
 def objective(params):
     with mlflow.start_run():
-        mlflow.set_tag("model", "xgboost")
+        mlflow.set_tag("model", "xgboost2")
         mlflow.log_params(params)
         booster = xgb.train(
             params=params,
@@ -144,7 +183,7 @@ def objective(params):
     return {'loss': rmse, 'status': STATUS_OK}
 ```
 
-Define search space for each hyperparameter
+Define search space, the range, for each hyperparameter
 
 ```
 search_space = {
@@ -153,10 +192,17 @@ search_space = {
     'reg_alpha': hp.loguniform('reg_alpha', -5, -1),
     'reg_lambda': hp.loguniform('reg_lambda', -6, -1),
     'min_child_weight': hp.loguniform('min_child_weight', -1, 3),
-    'objective': 'reg:linear',
+    'objective': 'reg:squarederror', #reg:linear was original, squarederrr is preferred
     'seed': 42
 }
+```
 
+```hp.quniform``` = uniform distribution low to high
+```hp.loguniform``` = logarithm of values is uniformly distrbuted
+
+fmin will optimize the objective method by minimizing the output
+
+```
 best_result = fmin(
     fn=objective,
     space=search_space,
@@ -166,11 +212,22 @@ best_result = fmin(
 )
 ```
 
-Autolog is disabled
+Autolog allows for automatic logging of
+
+* parameters
+* metrics
+* models
+* artifacts
+* training metadata
+
+without explicit log statements.
+
+Disable autolog
 
 ```mlflow.xgboost.autolog(disable=True)```
 
 Train the model with the best parameters and save run to MLFlow
+
 ```
 with mlflow.start_run():
     
@@ -317,4 +374,87 @@ with open("models/preprocessor.b", "wb") as f_out:
 mlflow.log_artifact("models/preprocessor.b", artifact_path="preprocessor")
 ```
 
+### Compare Models
+
+Select all runs and compare
+
+Parallel Coordinates Plot
+
+* learning rate
+* max_depth
+* min_child_weight
+* rmse
+
+![Parallel Coordinates Plot](images/mlflow-runs-parallel-plot.png)
+
+Scatter Plot
+
+* X-axis: learning_rate
+* Y-axis: rmse
+
+![Learning Rate by RMSE](images/mlflow-runs-scatter-1.png)
+
+* X-axis: max_depth
+* Y-axis: rmse
+
+![Max Depth by RMSE](images/mlflow-runs-scatter-2.png)
+
+* X-axis: min_child_weight
+* Y-axis: rmse
+
+![Min Child Weight by RMSE](images/mlflow-runs-scatter-3.png)
+
+Contour Plot
+
+* X-axis: learning_rate
+* Y-axis: max_depth
+* Z-axis: rmse
+
+![Learning Rate by Max Depth by RMSE](images/mlflow-runs-contour-1.png)
+
+* X-axis: learning_rate
+* Y-axis: min_child_weight
+* Z-axis: rmse
+
+![Learning Rate by Min Child Weight by RMSE](images/mlflow-runs-contour-2.png)
+
+Select lowest possible RMSE score. Check duration is shorter and max_depth is lower also. Choose the model with the least complexity.
+
+Duration: 1.1min
+
+```
+params = {
+    'learning_rate': 0.19913755185234963
+    'max_depth': 22
+    'min_child_weight': 1.2142790557597472
+    'objective': 'reg:squarederror'
+    'reg_alpha': 0.33313132563273024
+    'reg_lambda': 0.008551282616462179
+    'seed': 42
+}
+
+mlflow.xgboost.autolog()
+
+booster = xgb.train(
+    params=params,
+    dtrain=train,
+    num_boost_round=1000,
+    evals=[(valid, 'validation')],
+    early_stopping_rounds=50
+)
+```
+
 ## Model Registry
+
+What is the model registry?
+
+A centralized model store, set of APIs, and a UI, to collaboratively manage the full lifecycle of an MLFlow model.
+
+What information does it provide?
+
+* Model lineage
+* Model versioning
+* Stage transitions
+* Annotations
+
+To select a model, we look at the time in training, the RMSE, and the model size in MB.
