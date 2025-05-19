@@ -30,7 +30,7 @@ Optimization
 
 * train a model with the best performance
 
-## Tool: MLFlow
+## Tool: MLflow
 
 Open source platform for the ML lifecycle
 
@@ -64,7 +64,7 @@ Also logs extra information about the run
 * start and end time
 * author
 
-### Locally run mlflow
+### Locally run MLflow
 
 ```mlflow ui```
 
@@ -74,7 +74,7 @@ Store artifacts in sqlite
 
 ```mlflow ui --backend-store-uri sqlite:///mlflow.db```
 
-Shows UI for MLFlow
+Shows UI for MLflow
 
 Create experiment and name it
 
@@ -96,7 +96,7 @@ psycopg2-binary
 
 ```pip install -r requirements.txt```
 
-### Run MLFlow Remotely in EC2
+### Run MLflow Remotely in EC2
 
 In Jupyter Notebook
 
@@ -106,15 +106,15 @@ import mlflow
 mlflow.set_tracking_uri('http://<EC2_PUBLIC_DNS>:5000')
 ```
 
-![MLFlow Tracking URI](images/mlflow-tracking-uri.png)
+![MLflow Tracking URI](images/mlflow-tracking-uri.png)
 
 Test run mlflow
 
-![MLFLow Test 1](images/mlflow-test-1.png)
+![MLfLow Test 1](images/mlflow-test-1.png)
 
-![MLFlow Test 2](images/mlflow-test-2.png)
+![MLflow Test 2](images/mlflow-test-2.png)
 
-Set up the MLFlow experiment and name it ```nyc-taxi-experiment```
+Set up the MLflow experiment and name it ```nyc-taxi-experiment```
 
 ```mflow.set_experiment('nyc-taxi-experiment')```
 
@@ -226,7 +226,7 @@ Disable autolog
 
 ```mlflow.xgboost.autolog(disable=True)```
 
-Train the model with the best parameters and save run to MLFlow
+Train the model with the best parameters and save run to MLflow
 
 ```
 with mlflow.start_run():
@@ -423,36 +423,59 @@ Select lowest possible RMSE score. Check duration is shorter and max_depth is lo
 Duration: 1.1min
 
 ```
-params = {
-    'learning_rate': 0.19913755185234963
-    'max_depth': 22
-    'min_child_weight': 1.2142790557597472
-    'objective': 'reg:squarederror'
-    'reg_alpha': 0.33313132563273024
-    'reg_lambda': 0.008551282616462179
-    'seed': 42
-}
+mlflow.xgboost.autolog(disable=True)
+```
 
-mlflow.xgboost.autolog()
+```
+with mlflow.start_run():
+    train = xgb.DMatrix(X_train, label=y_train)
+    valid = xgb.DMatrix(X_val, label=y_val)
 
-booster = xgb.train(
-    params=params,
-    dtrain=train,
-    num_boost_round=1000,
-    evals=[(valid, 'validation')],
-    early_stopping_rounds=50
-)
+    best_params = {
+        'learning_rate': 0.19913755185234963,
+        'max_depth': 22,
+        'min_child_weight': 1.2142790557597472,
+        'objective': 'reg:squarederror',
+        'reg_alpha': 0.33313132563273024,
+        'reg_lambda': 0.008551282616462179,
+        'seed': 42,
+    }
+
+    mlflow.set_tag('parameters', 'best')
+    mlflow.log_params(best_params)
+
+    booster = xgb.train(
+        params=best_params,
+        dtrain=train,
+        num_boost_round=1000,
+        evals=[(valid, 'validation')],
+        early_stopping_rounds=50
+    )
+
+    y_pred = booster.predict(valid)
+    rmse = root_mean_squared_error(y_val, y_pred)
+    mlflow.log_metric('rmse', rmse)
+
+    with open('models/preprocessor.b', 'wb') as f_out:
+        pickle.dump(dv, f_out)
+    mlflow.log_artifact('models/preprocessor.b', artifact_path='preprocessor')
+
+    mlflow.xgboost.log_model(booster, artifact_path='models_mlflow')
 ```
 
 Download notebook
 
-```scp -i ~/.ssh/<key_name>.pem ubuntu@3.148.222.145:/home/ubuntu/notebooks/experiment-duration-green.ipynb ./experiment-duration-green.ipynb```
+```scp -i ~/.ssh/<key_name>.pem ubuntu@<Public_DNS>:/home/ubuntu/notebooks/experiment-duration-green.ipynb ./experiment-duration-green.ipynb```
+
+To select a model, we look at the time in training, the RMSE, and the model size in MB.
 
 ## Model Registry
 
 What is the model registry?
 
 A centralized model store, set of APIs, and a UI, to collaboratively manage the full lifecycle of an MLFlow model.
+
+It only lists the models that are production ready. Need some CI/CD to deploy the model.
 
 What information does it provide?
 
@@ -461,4 +484,10 @@ What information does it provide?
 * Stage transitions
 * Annotations
 
-To select a model, we look at the time in training, the RMSE, and the model size in MB.
+![MLflow Artifact](images/mlflow-artifact.png)
+
+![MLflow Register Model](images/mlflow-register-model.png)
+
+![MLflow RegisteredModel](images/mlflow-registered-model.png)
+
+![MLflow Model Registry](images/mlflow-model-registry.png)
