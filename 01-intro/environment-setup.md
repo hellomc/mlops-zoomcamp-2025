@@ -155,6 +155,25 @@ Authenticate connection to github
 
 ```git clone <git_repo_ssh_url>```
 
+To make sure you can also git push, check the following:
+
+```git remote -v```
+
+If output is this:
+```
+origin  https://github.com/<USERNAME>/<REPONAME>.git (fetch)
+origin  https://github.com/<USERNAME>/<REPONAME>.git (push)
+```
+
+Switch to SSH
+```git remote set-url origin git@github.com:<USERNAME>/<REPONAME>.git```
+
+Output:
+```
+origin git@github.com:<USERNAME>/<REPONAME>.git (fetch)
+origin git@github.com:<USERNAME>/<REPONAME>.git (push)
+```
+
 ## Access Visual Studio Code
 
 Connect remotely to EC2 instance
