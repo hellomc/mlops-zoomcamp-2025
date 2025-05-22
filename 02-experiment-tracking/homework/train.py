@@ -30,6 +30,7 @@ def run_train(data_path: str):
 
     rmse = root_mean_squared_error(y_val, y_pred)
 
+    mlflow.log_params(rf.get_params())
     mlflow.log_metric('rmse', rmse)
     # Save the model
     mlflow.sklearn.log_model(rf, artifact_path='models_mlflow')
@@ -43,8 +44,6 @@ if __name__ == '__main__':
 
     with mlflow.start_run():
         mlflow.set_tag('model', 'RandomForestRegressor')
-        mlflow.log_param('max_depth', 10)
-        mlflow.log_param('random_state', 0)
         
         run_train()
 
