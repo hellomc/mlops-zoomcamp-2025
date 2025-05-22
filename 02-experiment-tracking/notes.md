@@ -491,3 +491,9 @@ What information does it provide?
 ![MLflow RegisteredModel](images/mlflow-registered-model.png)
 
 ![MLflow Model Registry](images/mlflow-model-registry.png)
+
+## Alternatives to MLflow
+
+* [Weights & Biases](https://wandb.ai/site/)
+* [Comet](https://www.comet.com/site/)
+* [Neptune.ai](https://neptune.ai)
