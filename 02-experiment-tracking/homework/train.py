@@ -33,7 +33,7 @@ def run_train(data_path: str):
     mlflow.log_params(rf.get_params())
     mlflow.log_metric('rmse', rmse)
     # Save the model
-    mlflow.sklearn.log_model(rf, artifact_path='models_mlflow')
+    mlflow.sklearn.log_model(rf, artifact_path='models_mlflow', input_example=X_train[0:5])
 
 
 if __name__ == '__main__':
