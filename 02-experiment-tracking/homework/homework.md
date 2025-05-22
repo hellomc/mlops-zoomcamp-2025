@@ -84,7 +84,7 @@ What is the value of the `min_samples_split` parameter:
 * 8
 * 10
 
-![Parameters](images/hw-q3.png)
+![Parameters](../images/hw-q3.png)
 
 Answer: 2
 
@@ -132,7 +132,7 @@ What's the best validation RMSE that you got?
 * 5.818
 * 6.336
 
-![Best Loss](images/hw-q5.png)
+![Best Loss](../images/hw-q5.png)
 
 Answer: 5.335
 
@@ -155,8 +155,8 @@ What is the test RMSE of the best model?
 * 6.061
 * 6.568
 
-![Test RMSE](images/hw-q6.png)
-![Model Registered](images/hw-q6-2.png)
+![Test RMSE](../images/hw-q6.png)
+![Model Registered](../images/hw-q6-2.png)
 Answer: 5.567
 
 ## Submit the results
