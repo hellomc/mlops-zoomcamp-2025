@@ -15,5 +15,9 @@
 
 ## [Module 2 Experiment Tracking & Model Management](02-experiment-tracking)
 
+✅ Built a cloud-based MLflow tracking server on AWS using EC2, PostgreSQL (RDS), and S3
+✅ Trained and tracked XGBoost and RandomForest models to predict NYC taxi trip durations
+✅ Tuned hyperparameters and compared model performance using MLflow
+✅ Registered the best models in MLflow’s model registry for reproducibility and version control
 
 ## Module 3 Workflow Orchestration
