@@ -98,6 +98,8 @@ psycopg2-binary
 
 ### Run MLflow Remotely in EC2
 
+Refer to setup instructions in [MLflow AWS Setup](mlflow-aws-setup.md)
+
 In Jupyter Notebook
 
 ```
