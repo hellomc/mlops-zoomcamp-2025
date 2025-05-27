@@ -8,16 +8,16 @@
 
 ## [Module 1 Introduction](01-intro)
 
-✅ Launched an Amazon EC2 instance and installed Anaconda and Docker
-✅ Connected remotely to the EC2 instance via VSCode
-✅ Trained a linear regression model to predict NYC Taxi trip duration
-✅ Explored key MLOps concepts, including why MLOps matters and the MLOps maturity model
+✅ Launched an Amazon EC2 instance and installed Anaconda and Docker<br />
+✅ Connected remotely to the EC2 instance via VSCode<br />
+✅ Trained a linear regression model to predict NYC Taxi trip duration<br />
+✅ Explored key MLOps concepts, including why MLOps matters and the MLOps maturity model<br />
 
 ## [Module 2 Experiment Tracking & Model Management](02-experiment-tracking)
 
-✅ Built a cloud-based MLflow tracking server on AWS using EC2, PostgreSQL (RDS), and S3
-✅ Trained and tracked XGBoost and RandomForest models to predict NYC taxi trip durations
-✅ Tuned hyperparameters and compared model performance using MLflow
-✅ Registered the best models in MLflow’s model registry for reproducibility and version control
+✅ Built a cloud-based MLflow tracking server on AWS using EC2, PostgreSQL (RDS), and S3<br />
+✅ Trained and tracked XGBoost and RandomForest models to predict NYC taxi trip durations<br />
+✅ Tuned hyperparameters and compared model performance using MLflow<br />
+✅ Registered the best models in MLflow’s model registry for reproducibility and version control<br />
 
 ## Module 3 Workflow Orchestration
